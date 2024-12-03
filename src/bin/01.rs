@@ -1,4 +1,4 @@
-use rust_utils::utils::{split_2d_by_regex, to_2d_numeric, rotate};
+use rust_utils::utils::{rotate, split_2d_by_regex, to_2d_numeric};
 use std::collections::HashMap;
 
 advent_of_code::solution!(1);
@@ -12,7 +12,7 @@ pub fn part_one(data: &str) -> Option<i32> {
 
     let mut sum = 0;
     for i in 0..input[0].len() {
-        sum += (input[0][i] - input[1][i]).abs(); 
+        sum += (input[0][i] - input[1][i]).abs();
     }
 
     Some(sum)

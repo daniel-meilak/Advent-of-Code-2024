@@ -27,7 +27,9 @@ fn safe_with_tolerance(report: &[i32]) -> bool {
         let mut partial = report.to_vec();
         partial.remove(i);
 
-        if safe(&partial) { return true } 
+        if safe(&partial) {
+            return true;
+        }
     }
 
     false
@@ -38,7 +40,12 @@ pub fn part_one(input: &str) -> Option<usize> {
 }
 
 pub fn part_two(input: &str) -> Option<usize> {
-    Some(parse(input).iter().filter(|x| safe_with_tolerance(x)).count())
+    Some(
+        parse(input)
+            .iter()
+            .filter(|x| safe_with_tolerance(x))
+            .count(),
+    )
 }
 
 #[cfg(test)]

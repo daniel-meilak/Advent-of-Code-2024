@@ -8,11 +8,11 @@ pub fn part_one(input: &str) -> Option<u32> {
 
     let result: u32 = regex
         .captures_iter(input)
-        .filter_map(|captures| {
-            Some((
-                captures.get(1)?.as_str().parse::<u32>().unwrap(),
-                captures.get(2)?.as_str().parse::<u32>().unwrap(),
-            ))
+        .map(|captures| {
+            (
+                captures.get(1).unwrap().as_str().parse::<u32>().unwrap(),
+                captures.get(2).unwrap().as_str().parse::<u32>().unwrap(),
+            )
         })
         .map(|pair| pair.0 * pair.1)
         .sum();
@@ -23,28 +23,30 @@ pub fn part_one(input: &str) -> Option<u32> {
 pub fn part_two(input: &str) -> Option<u32> {
     let regex = Regex::new(r"mul\((\d{1,3}),(\d{1,3})\)|do\(\)|don't\(\)").unwrap();
 
-    let result= regex
+    let result = regex
         .captures_iter(input)
-        .filter_map(|matches| {
+        .map(|matches| {
             if matches.get(1).is_none() {
-                Some(vec![matches.get(0)?.as_str()])
+                vec![matches.get(0).unwrap().as_str()]
             } else {
-                Some(vec![
-                    matches.get(1)?.as_str(),
-                    matches.get(2)?.as_str(),
-                ])
+                vec![
+                    matches.get(1).unwrap().as_str(),
+                    matches.get(2).unwrap().as_str(),
+                ]
             }
         })
         .collect_vec();
 
     let mut skip = false;
-    let mut sum = 0; 
+    let mut sum = 0;
     for item in result {
         match item.as_slice() {
             &["do()"] => skip = false,
             &["don't()"] => skip = true,
-            mul => if !skip {
-                sum += mul[0].parse::<u32>().unwrap() * mul[1].parse::<u32>().unwrap();
+            mul => {
+                if !skip {
+                    sum += mul[0].parse::<u32>().unwrap() * mul[1].parse::<u32>().unwrap();
+                }
             }
         }
     }
