@@ -12,11 +12,14 @@
                 "args": [
                     "test",
                     "--no-run",
-                    // replace `01` here with the solution you like to debug.
-                    "--bin=01",
+                    "--bin=${fileBasenameNoExtension}",
                     "--package=advent_of_code"
                 ],
             },
+            "expressions": "simple",
+            "preRunCommands": [
+                "command script import ${workspaceFolder}/.vscode/rust_prettifier_for_lldb.py"
+            ],
             "args": [],
             "cwd": "${workspaceFolder}"
         },
@@ -27,8 +30,7 @@
             "cargo": {
                 "args": [
                     "build",
-                    // replace `01` here with the solution you like to debug.
-                    "--bin=01",
+                    "--bin=${fileBasenameNoExtension}",
                     "--package=advent_of_code"
                 ],
             },
@@ -51,6 +53,7 @@
                     "kind": "lib"
                 }
             },
+            "expressions": "simple",
             "args": [],
             "cwd": "${workspaceFolder}"
         }
