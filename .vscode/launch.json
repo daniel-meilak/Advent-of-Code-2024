@@ -20,7 +20,9 @@
             "preRunCommands": [
                 "command script import ${workspaceFolder}/.vscode/rust_prettifier_for_lldb.py"
             ],
-            "args": [],
+            "args": [
+                "--nocapture"
+            ],
             "cwd": "${workspaceFolder}"
         },
         {
