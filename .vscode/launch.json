@@ -36,6 +36,10 @@
                     "--package=advent_of_code"
                 ],
             },
+            "expressions": "simple",
+            "preRunCommands": [
+                "command script import ${workspaceFolder}/.vscode/rust_prettifier_for_lldb.py"
+            ],
             "cwd": "${workspaceFolder}"
         },
         {
