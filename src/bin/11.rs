@@ -11,12 +11,16 @@ fn blink(stone: String, n: usize) -> usize {
     let result = match stone.as_str() {
         "0" => blink("1".to_string(), n - 1),
         _ if stone.len() % 2 == 0 => {
-            let mid = stone.len()/2;
+            let mid = stone.len() / 2;
             let mut other_half = stone[mid..].trim_start_matches('0').to_string();
-            other_half = if other_half.is_empty() {"0".to_string()} else { other_half };
+            other_half = if other_half.is_empty() {
+                "0".to_string()
+            } else {
+                other_half
+            };
 
             blink(stone[..mid].to_string(), n - 1) + blink(other_half, n - 1)
-        },
+        }
         _ => blink((stone.parse::<u128>().unwrap() * 2024).to_string(), n - 1),
     };
 
@@ -28,12 +32,9 @@ fn arrangement(input: &str, n: usize) -> usize {
         .split_ascii_whitespace()
         .map(|stone| stone.chars().collect())
         .collect();
-    
-    let result = stones
-        .iter()
-        .map(|stone| blink(stone.clone(), n))
-        .sum();
-    
+
+    let result = stones.iter().map(|stone| blink(stone.clone(), n)).sum();
+
     result
 }
 

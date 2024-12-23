@@ -3,16 +3,13 @@ use std::collections::{HashMap, HashSet, VecDeque};
 advent_of_code::solution!(16);
 
 fn score_and_paths(input: &str) -> (usize, Vec<Vec<(usize, usize)>>) {
-    let grid: Vec<Vec<char>> = input
-        .lines()
-        .map(|line| { line.chars().collect() })
-        .collect();
-    
+    let grid: Vec<Vec<char>> = input.lines().map(|line| line.chars().collect()).collect();
+
     let start = (1, grid.len() - 2);
     let end = (grid[0].len() - 2, 1);
 
     let mut unique = HashMap::new();
-    let mut queue = VecDeque::from([(vec![start], (1,0), 0)]);
+    let mut queue = VecDeque::from([(vec![start], (1, 0), 0)]);
 
     let mut best_paths = Vec::new();
     let mut min_score = usize::MAX;
@@ -40,8 +37,11 @@ fn score_and_paths(input: &str) -> (usize, Vec<Vec<(usize, usize)>>) {
             best_paths.push(path.clone());
         }
 
-        for new_dir in [(1,0), (-1,0), (0,1), (0,-1)] {
-            let next = ((pos.0 as i32 + new_dir.0) as usize, (pos.1 as i32 + new_dir.1) as usize);
+        for new_dir in [(1, 0), (-1, 0), (0, 1), (0, -1)] {
+            let next = (
+                (pos.0 as i32 + new_dir.0) as usize,
+                (pos.1 as i32 + new_dir.1) as usize,
+            );
 
             if grid[next.1][next.0] == '#' {
                 continue;

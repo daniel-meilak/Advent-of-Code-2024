@@ -4,7 +4,12 @@ use itertools::Itertools;
 
 advent_of_code::solution!(10);
 
-fn get_neighbours(pos: (usize, usize), width: usize, height: usize, grid: &[Vec<char>]) -> Vec<(usize, usize)> {
+fn get_neighbours(
+    pos: (usize, usize),
+    width: usize,
+    height: usize,
+    grid: &[Vec<char>],
+) -> Vec<(usize, usize)> {
     let (x, y) = pos;
     let mut neighbours = Vec::new();
 
@@ -21,12 +26,18 @@ fn get_neighbours(pos: (usize, usize), width: usize, height: usize, grid: &[Vec<
         neighbours.push((x, y - 1));
     }
 
-    neighbours.into_iter().filter(|(x, y)| grid[*y][*x] as u8 == 1 + grid[pos.1][pos.0] as u8).collect()
+    neighbours
+        .into_iter()
+        .filter(|(x, y)| grid[*y][*x] as u8 == 1 + grid[pos.1][pos.0] as u8)
+        .collect()
 }
 
 pub fn part_one(input: &str) -> Option<u32> {
-    let grid = input.lines().map(|line| line.chars().collect_vec()).collect_vec();
-    
+    let grid = input
+        .lines()
+        .map(|line| line.chars().collect_vec())
+        .collect_vec();
+
     let width = grid[0].len();
     let height = grid.len();
 
@@ -34,7 +45,9 @@ pub fn part_one(input: &str) -> Option<u32> {
         .iter()
         .enumerate()
         .flat_map(|(j, row)| {
-            row.iter().enumerate().filter_map(move |(i, c)| if c == &'0' { Some((i,j)) } else { None })
+            row.iter()
+                .enumerate()
+                .filter_map(move |(i, c)| if c == &'0' { Some((i, j)) } else { None })
         })
         .collect();
 
@@ -63,8 +76,11 @@ pub fn part_one(input: &str) -> Option<u32> {
 }
 
 pub fn part_two(input: &str) -> Option<u32> {
-    let grid = input.lines().map(|line| line.chars().collect_vec()).collect_vec();
-    
+    let grid = input
+        .lines()
+        .map(|line| line.chars().collect_vec())
+        .collect_vec();
+
     let width = grid[0].len();
     let height = grid.len();
 
@@ -72,7 +88,9 @@ pub fn part_two(input: &str) -> Option<u32> {
         .iter()
         .enumerate()
         .flat_map(|(j, row)| {
-            row.iter().enumerate().filter_map(move |(i, c)| if c == &'0' { Some((i,j)) } else { None })
+            row.iter()
+                .enumerate()
+                .filter_map(move |(i, c)| if c == &'0' { Some((i, j)) } else { None })
         })
         .collect();
 

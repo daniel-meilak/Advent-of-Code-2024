@@ -56,7 +56,7 @@ impl Computer {
 
     fn combo(&mut self, operand: usize) -> usize {
         match operand {
-            x @ 0..4 => x ,
+            x @ 0..4 => x,
             4 => self.a,
             5 => self.b,
             6 => self.c,
@@ -70,7 +70,7 @@ impl Computer {
 
         while self.pointer < instructions.len() {
             let (opcode, operand) = (instructions[self.pointer], instructions[self.pointer + 1]);
-            
+
             let combo = self.combo(operand);
 
             match opcode {
@@ -97,7 +97,13 @@ impl Computer {
             .join(",")
     }
 
-    fn copy_input(&mut self, a: usize, compare_index: usize , instructions: &[usize], copiers: &mut BTreeSet<usize>) -> usize {
+    fn copy_input(
+        &mut self,
+        a: usize,
+        compare_index: usize,
+        instructions: &[usize],
+        copiers: &mut BTreeSet<usize>,
+    ) -> usize {
         for n in 0..8 {
             let new_a = (a << 3) | n;
             self.a = new_a;
@@ -116,7 +122,6 @@ impl Computer {
 
         *copiers.iter().next().unwrap_or(&0)
     }
-
 }
 
 fn setup(input: &str) -> (Computer, Vec<usize>) {

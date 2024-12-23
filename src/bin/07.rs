@@ -2,11 +2,21 @@ advent_of_code::solution!(7);
 
 fn generate_permutations(operators: &[&str], length: usize) -> Vec<Vec<String>> {
     let mut results = Vec::new();
-    backtrack(operators, length, &mut Vec::with_capacity(length), &mut results);
+    backtrack(
+        operators,
+        length,
+        &mut Vec::with_capacity(length),
+        &mut results,
+    );
     results
 }
 
-fn backtrack(operators: &[&str], length: usize, current: &mut Vec<String>, results: &mut Vec<Vec<String>>) {
+fn backtrack(
+    operators: &[&str],
+    length: usize,
+    current: &mut Vec<String>,
+    results: &mut Vec<Vec<String>>,
+) {
     if current.len() == length {
         results.push(current.clone());
         return;
@@ -48,7 +58,7 @@ fn calibrate(input: &str, operators: &[&str]) -> u128 {
             }
         }
     }
-    
+
     total
 }
 

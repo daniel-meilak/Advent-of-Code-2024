@@ -14,7 +14,7 @@ fn find_char(c: char, grid: &str) -> Point {
     let pos = grid.find(c).unwrap();
     let width = grid.find('\n').unwrap() + 1;
 
-    (pos %  width, pos / width)
+    (pos % width, pos / width)
 }
 
 fn get_neighbours(pos: Point, step: i32, grid: &[Vec<char>]) -> Vec<Point> {
@@ -29,12 +29,15 @@ fn get_neighbours(pos: Point, step: i32, grid: &[Vec<char>]) -> Vec<Point> {
         if dy != 0 {
             neighbours.push((pos.0 as i32 + dx, pos.1 as i32 - dy));
         }
-        
     }
 
     neighbours
         .iter()
-        .filter(|&next| (0..width).contains(&next.0) && (0..height).contains(&next.1) && grid[next.1 as usize][next.0 as usize] != '#' )
+        .filter(|&next| {
+            (0..width).contains(&next.0)
+                && (0..height).contains(&next.1)
+                && grid[next.1 as usize][next.0 as usize] != '#'
+        })
         .map(|next| (next.0 as usize, next.1 as usize))
         .collect()
 }
@@ -43,11 +46,8 @@ fn get_times(input: &str) -> (HashMap<Point, usize>, Vec<Vec<char>>) {
     let start = find_char('S', input);
     let end = find_char('E', input);
 
-    let grid: Vec<Vec<char>> = input
-        .lines()
-        .map(|line| line.chars().collect())
-        .collect();
-    
+    let grid: Vec<Vec<char>> = input.lines().map(|line| line.chars().collect()).collect();
+
     let mut queue = VecDeque::new();
     let mut baseline = HashMap::new();
 
@@ -68,13 +68,17 @@ fn get_times(input: &str) -> (HashMap<Point, usize>, Vec<Vec<char>>) {
             break;
         }
 
-        queue.extend(get_neighbours(pos, 1, &grid).into_iter().map(|next| (next, time + 1)));
+        queue.extend(
+            get_neighbours(pos, 1, &grid)
+                .into_iter()
+                .map(|next| (next, time + 1)),
+        );
     }
 
     (baseline, grid)
 }
 
-pub fn part_one(input: &str) -> Option<usize> {    
+pub fn part_one(input: &str) -> Option<usize> {
     let (baseline, grid) = get_times(input);
 
     let mut shortcuts = Vec::new();
@@ -86,10 +90,7 @@ pub fn part_one(input: &str) -> Option<usize> {
         }
     }
 
-    let count = shortcuts
-        .iter()
-        .filter(|&time| *time >= TIME_SAVE)
-        .count();
+    let count = shortcuts.iter().filter(|&time| *time >= TIME_SAVE).count();
 
     Some(count)
 }
@@ -108,10 +109,7 @@ pub fn part_two(input: &str) -> Option<usize> {
         }
     }
 
-    let count = shortcuts
-        .iter()
-        .filter(|&time| *time >= TIME_SAVE)
-        .count();
+    let count = shortcuts.iter().filter(|&time| *time >= TIME_SAVE).count();
 
     Some(count)
 }

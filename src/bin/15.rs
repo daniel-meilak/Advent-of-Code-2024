@@ -2,7 +2,7 @@ advent_of_code::solution!(15);
 
 fn add(lhs: usize, rhs: i32) -> usize {
     (lhs as i32 + rhs) as usize
-}       
+}
 
 fn shift(grid: &mut [Vec<char>], positions: &mut [(usize, usize)], dir: (i32, i32)) {
     positions.sort();
@@ -32,10 +32,13 @@ fn sum_gps(grid: &[Vec<char>]) -> usize {
     grid.iter()
         .enumerate()
         .flat_map(|(j, row)| {
-            row
-                .iter()
-                .enumerate()
-                .filter_map(move |(i, &c)| if "O[".contains(c) { Some(i + j * 100 ) } else { None })
+            row.iter().enumerate().filter_map(move |(i, &c)| {
+                if "O[".contains(c) {
+                    Some(i + j * 100)
+                } else {
+                    None
+                }
+            })
         })
         .sum()
 }
@@ -44,12 +47,12 @@ fn find_robot(grid: &[Vec<char>]) -> (usize, usize) {
     grid.iter()
         .enumerate()
         .flat_map(|(j, row)| {
-            row
-                .iter()
+            row.iter()
                 .enumerate()
                 .filter_map(move |(i, &c)| if c == '@' { Some((i, j)) } else { None })
         })
-        .next().unwrap()
+        .next()
+        .unwrap()
 }
 
 fn get_dir(direction: char) -> (i32, i32) {
@@ -58,13 +61,15 @@ fn get_dir(direction: char) -> (i32, i32) {
         '<' => (-1, 0),
         '^' => (0, -1),
         'v' => (0, 1),
-        _ => panic!(), 
+        _ => panic!(),
     }
 }
 
 fn move_robot_small_boxes(mut robot: (usize, usize), grid: &mut [Vec<char>], movements: &str) {
     for direction in movements.chars() {
-        if direction == '\n' { continue; }
+        if direction == '\n' {
+            continue;
+        }
         let dir = get_dir(direction);
 
         let mut stack = vec![robot];
@@ -75,11 +80,10 @@ fn move_robot_small_boxes(mut robot: (usize, usize), grid: &mut [Vec<char>], mov
                     shift(grid, &mut stack, dir);
                     robot = (add(robot.0, dir.0), add(robot.1, dir.1));
                     break;
-                },
+                }
                 'O' => stack.push(next),
                 '#' => break,
                 _ => panic!(),
-                
             }
 
             next = (add(next.0, dir.0), add(next.1, dir.1));
@@ -89,11 +93,13 @@ fn move_robot_small_boxes(mut robot: (usize, usize), grid: &mut [Vec<char>], mov
 
 fn move_robot_large_boxes(mut robot: (usize, usize), grid: &mut [Vec<char>], movements: &str) {
     for direction in movements.chars() {
-        if direction == '\n' { continue; }
+        if direction == '\n' {
+            continue;
+        }
         let dir = get_dir(direction);
 
         let mut stack = vec![robot];
-        
+
         loop {
             let mut can_move = 0;
             let mut blocked = false;
@@ -103,22 +109,24 @@ fn move_robot_large_boxes(mut robot: (usize, usize), grid: &mut [Vec<char>], mov
 
                 match grid[next.1][next.0] {
                     '.' => can_move += 1,
-                    x @'[' | x @ ']' => {
+                    x @ '[' | x @ ']' => {
                         if stack.contains(&next) {
                             can_move += 1;
                             continue;
                         } else {
                             stack.push(next);
-                            stack.push((add(next.0, if x == '[' {1} else {-1}) , next.1));
+                            stack.push((add(next.0, if x == '[' { 1 } else { -1 }), next.1));
                             break;
                         }
-                    },
+                    }
                     '#' => blocked = true,
                     _ => panic!(),
                 }
             }
 
-            if blocked { break; }
+            if blocked {
+                break;
+            }
 
             if can_move == stack.len() {
                 shift(grid, &mut stack, dir);

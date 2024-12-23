@@ -12,7 +12,10 @@ fn get_rules_and_updates(input: &str) -> (HashMap<&str, HashSet<&str>>, &str) {
     for line in rules.lines() {
         let (before, after) = line.split('|').collect_tuple().unwrap();
 
-        before_rules.entry(before).or_insert_with(HashSet::new).insert(after);
+        before_rules
+            .entry(before)
+            .or_insert_with(HashSet::new)
+            .insert(after);
         before_rules.entry(after).or_default();
     }
 
@@ -21,12 +24,12 @@ fn get_rules_and_updates(input: &str) -> (HashMap<&str, HashSet<&str>>, &str) {
 
 fn ordered(pages: &[&str], rules: &HashMap<&str, HashSet<&str>>) -> bool {
     for i in 0..pages.len() {
-        for j in i+1..pages.len() {
+        for j in i + 1..pages.len() {
             if !rules[pages[i]].contains(pages[j]) {
                 return false;
             }
         }
-    } 
+    }
 
     true
 }
@@ -39,7 +42,7 @@ pub fn part_one(input: &str) -> Option<u32> {
         let pages: Vec<&str> = line.split(',').collect();
 
         if ordered(&pages, &rules) {
-            total += pages[pages.len()/2].parse::<u32>().unwrap();
+            total += pages[pages.len() / 2].parse::<u32>().unwrap();
         }
     }
 
@@ -67,10 +70,10 @@ pub fn part_two(input: &str) -> Option<u32> {
                 }
             }
 
-            total += new_order[new_order.len()/2].parse::<u32>().unwrap();
+            total += new_order[new_order.len() / 2].parse::<u32>().unwrap();
         }
     }
-    
+
     Some(total)
 }
 

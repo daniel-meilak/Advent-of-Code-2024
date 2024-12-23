@@ -4,13 +4,12 @@ advent_of_code::solution!(19);
 
 #[cached]
 fn ways_to_build(design: String, patterns: Vec<String>) -> usize {
-
     if design.is_empty() {
         return 1;
     }
 
     let mut count = 0;
-    for pattern in patterns.iter() {    
+    for pattern in patterns.iter() {
         if let Some(left_over) = design.strip_prefix(pattern) {
             count += ways_to_build(left_over.to_owned(), patterns.clone());
         }
@@ -22,10 +21,7 @@ fn ways_to_build(design: String, patterns: Vec<String>) -> usize {
 fn parse(input: &str) -> (Vec<String>, String) {
     let (pattern_list, design_list) = input.split_once("\n\n").unwrap();
 
-    let patterns: Vec<String> = pattern_list
-        .split(", ")
-        .map(|s| s.to_owned())
-        .collect();
+    let patterns: Vec<String> = pattern_list.split(", ").map(|s| s.to_owned()).collect();
 
     (patterns, design_list.to_owned())
 }
@@ -37,7 +33,7 @@ pub fn part_one(input: &str) -> Option<usize> {
         .lines()
         .filter(|&design| ways_to_build(design.to_owned(), patterns.clone()) > 0)
         .count();
-    
+
     Some(count)
 }
 
@@ -48,7 +44,7 @@ pub fn part_two(input: &str) -> Option<usize> {
         .lines()
         .map(|design| ways_to_build(design.to_owned(), patterns.clone()))
         .sum();
-    
+
     Some(count)
 }
 

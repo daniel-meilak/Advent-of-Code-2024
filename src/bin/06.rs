@@ -1,5 +1,5 @@
-use rust_utils::utils::pad;
 use core::panic;
+use rust_utils::utils::pad;
 use std::collections::HashSet;
 
 advent_of_code::solution!(6);
@@ -14,7 +14,12 @@ fn turn_right(dir: &char) -> char {
     }
 }
 
-fn next_step(orientation: &mut char, pos: &mut (usize, usize), grid: &[Vec<char>], turning_points: &mut HashSet<((usize, usize), char)>) -> (char, bool) {
+fn next_step(
+    orientation: &mut char,
+    pos: &mut (usize, usize),
+    grid: &[Vec<char>],
+    turning_points: &mut HashSet<((usize, usize), char)>,
+) -> (char, bool) {
     let mut next = *pos;
     match orientation {
         '^' => next.1 -= 1,
@@ -37,12 +42,10 @@ fn next_step(orientation: &mut char, pos: &mut (usize, usize), grid: &[Vec<char>
 }
 
 fn start(grid: &[Vec<char>]) -> (usize, usize) {
-        grid
-        .iter()
+    grid.iter()
         .enumerate()
-        .find_map(|(j, row)| {
-            row.iter().position(|&c| c == '^').map(|i| (i, j))
-        }).unwrap()
+        .find_map(|(j, row)| row.iter().position(|&c| c == '^').map(|i| (i, j)))
+        .unwrap()
 }
 
 pub fn part_one(input: &str) -> Option<usize> {
@@ -67,10 +70,13 @@ pub fn part_two(input: &str) -> Option<u32> {
     let begin = start(&grid);
     let mut loops = 0;
 
-    for j in 1..grid.len()-1 {
-        for i in 1..grid[0].len()-1 {
-            if grid[j][i] == '.' { grid[j][i] = '#' }
-            else { continue }
+    for j in 1..grid.len() - 1 {
+        for i in 1..grid[0].len() - 1 {
+            if grid[j][i] == '.' {
+                grid[j][i] = '#'
+            } else {
+                continue;
+            }
 
             let mut pos = begin;
             let mut orientation = '^';
@@ -89,7 +95,7 @@ pub fn part_two(input: &str) -> Option<u32> {
             grid[j][i] = '.';
         }
     }
-    
+
     Some(loops)
 }
 

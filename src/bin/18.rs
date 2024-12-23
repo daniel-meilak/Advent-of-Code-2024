@@ -29,13 +29,13 @@ fn get_neighbours(pos: Point, grid: &HashSet<Point>, unique: &HashSet<Point>) ->
         if in_bounds(next) && !grid.contains(&next) && !unique.contains(&next) {
             neighbours.push(next);
         }
-    } 
+    }
 
     neighbours
 }
 
 fn fill_grid(input: &str) -> (Vec<Point>, HashSet<Point>) {
-    let mut grid= HashSet::new();
+    let mut grid = HashSet::new();
 
     let byte_positions: Vec<Point> = input
         .lines()
@@ -51,7 +51,7 @@ fn fill_grid(input: &str) -> (Vec<Point>, HashSet<Point>) {
 }
 
 fn get_path(grid: &HashSet<Point>) -> HashSet<Point> {
-    let start = (0,0);
+    let start = (0, 0);
     let end = (MAX_WIDTH, MAX_HEIGHT);
 
     let mut unique = HashSet::new();
@@ -88,7 +88,7 @@ pub fn part_two(input: &str) -> Option<String> {
     let (byte_positions, mut grid) = fill_grid(input);
 
     let mut path = get_path(&grid);
-    
+
     let mut impass = (0, 0);
     for byte in byte_positions[BYTES..].iter() {
         grid.insert(*byte);
