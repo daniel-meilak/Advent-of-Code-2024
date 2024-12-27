@@ -5,7 +5,7 @@ pub fn part_one(input: &str) -> Option<u32> {
 
     let mut locks = Vec::new();
     let mut keys = Vec::new();
-    
+
     for item in locks_and_keys {
         if item.starts_with("#####") {
             locks.push(item);
@@ -17,13 +17,13 @@ pub fn part_one(input: &str) -> Option<u32> {
     let mut overlapping = 0;
     for lock in locks {
         for key in &keys {
-            overlapping += lock.chars()
+            overlapping += lock
+                .chars()
                 .zip(key.chars())
                 .all(|(a, b)| !(a == '#' && b == '#')) as u32;
-            println!()
         }
     }
-    
+
     Some(overlapping)
 }
 

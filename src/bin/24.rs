@@ -1,9 +1,13 @@
-use std::collections::{HashMap, HashSet};
 use itertools::Itertools;
+use std::collections::{HashMap, HashSet};
 
 advent_of_code::solution!(24);
 
-fn calculate(gate: String, set_bits: &mut HashMap<String, bool>, connections: &HashMap<String, Vec<String>>) -> bool {
+fn calculate(
+    gate: String,
+    set_bits: &mut HashMap<String, bool>,
+    connections: &HashMap<String, Vec<String>>,
+) -> bool {
     if let Some(found_gate) = set_bits.get(&gate) {
         return *found_gate;
     }
@@ -18,7 +22,7 @@ fn calculate(gate: String, set_bits: &mut HashMap<String, bool>, connections: &H
         "XOR" => lhs ^ rhs,
         _ => panic!(),
     };
-    
+
     set_bits.insert(gate, result);
 
     result
@@ -27,19 +31,25 @@ fn calculate(gate: String, set_bits: &mut HashMap<String, bool>, connections: &H
 fn parse(input: &str) -> (HashMap<String, bool>, HashMap<String, Vec<String>>) {
     let (initial_bits, instructions) = input.split_once("\n\n").unwrap();
 
-    let set_bits: HashMap<_,_> = initial_bits
+    let set_bits: HashMap<_, _> = initial_bits
         .lines()
         .map(|line| line.split_once(": ").unwrap())
         .map(|(gate, value)| (gate.to_owned(), value.parse::<usize>().unwrap() != 0))
         .collect();
 
-    let connections: HashMap<_,Vec<_>> = instructions
+    let connections: HashMap<_, Vec<_>> = instructions
         .lines()
-        .map(|line| line
-            .split(|c| [' ', '-', '>'].contains(&c))
-            .filter(|s| !s.is_empty())
-            .collect::<Vec<_>>())
-        .map(|v| (v[3].to_owned(), vec![v[0].to_owned(), v[1].to_owned(), v[2].to_owned()]))
+        .map(|line| {
+            line.split(|c| [' ', '-', '>'].contains(&c))
+                .filter(|s| !s.is_empty())
+                .collect::<Vec<_>>()
+        })
+        .map(|v| {
+            (
+                v[3].to_owned(),
+                vec![v[0].to_owned(), v[1].to_owned(), v[2].to_owned()],
+            )
+        })
         .collect();
 
     (set_bits, connections)
@@ -55,16 +65,22 @@ pub fn part_one(input: &str) -> Option<u64> {
 
     let sum = set_bits
         .iter()
-        .filter_map(|(gate, value)| if gate.starts_with('z') { Some((gate, *value as u64)) } else { None })
-        .sorted_by(|(a, _), (b, _)|  b.cmp(a))
+        .filter_map(|(gate, value)| {
+            if gate.starts_with('z') {
+                Some((gate, *value as u64))
+            } else {
+                None
+            }
+        })
+        .sorted_by(|(a, _), (b, _)| b.cmp(a))
         .fold(0, |acc, (_, b)| (acc << 1) | (b));
-    
+
     Some(sum)
 }
 
 pub fn part_two(input: &str) -> Option<String> {
     let (_, connections) = parse(input);
-    
+
     let max_z = connections
         .keys()
         .filter(|result| result.starts_with('z'))
@@ -75,22 +91,32 @@ pub fn part_two(input: &str) -> Option<String> {
     // all but final input to z?? uses XOR
     let mut swapped: HashSet<_> = connections
         .iter()
-        .filter(|(result, _ )| result.starts_with('z') && *result != max_z)
+        .filter(|(result, _)| result.starts_with('z') && *result != max_z)
         .sorted_by_key(|(gate, _)| *gate)
         .filter_map(|(result, v)| if v[1] != "XOR" { Some(result) } else { None })
         .collect();
 
     // all XOR must either be between x && y or result in z
-    swapped.extend(connections
-        .iter()
-        .filter(|(_, v)| v[1] == "XOR")
-        .filter(|(result, v)| !(result.starts_with('z') || v[0].starts_with('x') || v[0].starts_with('y')))
-        .map(|(result, _)| result));
+    swapped.extend(
+        connections
+            .iter()
+            .filter(|(_, v)| v[1] == "XOR")
+            .filter(|(result, v)| {
+                !(result.starts_with('z') || v[0].starts_with('x') || v[0].starts_with('y'))
+            })
+            .map(|(result, _)| result),
+    );
 
     // outputs of AND operations...
     let ands: HashSet<_> = connections
         .iter()
-        .filter_map(|(result, v)| if v[1] == "AND" && v[0] != "x00" { Some(result) } else { None })
+        .filter_map(|(result, v)| {
+            if v[1] == "AND" && v[0] != "x00" {
+                Some(result)
+            } else {
+                None
+            }
+        })
         .cloned()
         .collect();
 
@@ -105,10 +131,7 @@ pub fn part_two(input: &str) -> Option<String> {
     // shoult be a complete set (the odd ones out are mixed wires)
     swapped.extend(ands.symmetric_difference(&ors));
 
-    let names = swapped
-        .iter()
-        .sorted()
-        .join(",");
+    let names = swapped.iter().sorted().join(",");
 
     Some(names)
 }

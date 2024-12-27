@@ -9,8 +9,14 @@ fn nodes(input: &str) -> HashMap<&str, HashSet<&str>> {
         .lines()
         .map(|line| line.split('-').collect::<Vec<_>>())
         .for_each(|v| {
-            computers.entry(v[0]).or_insert_with(HashSet::new).insert(v[1]);
-            computers.entry(v[1]).or_insert_with(HashSet::new).insert(v[0]);
+            computers
+                .entry(v[0])
+                .or_insert_with(HashSet::new)
+                .insert(v[1]);
+            computers
+                .entry(v[1])
+                .or_insert_with(HashSet::new)
+                .insert(v[0]);
         });
 
     computers
@@ -50,10 +56,16 @@ fn bron_kerbosch<'a>(
 
             // New P is P ∩ N(v)
             let neighbors = graph.get(&node).cloned().unwrap_or_default();
-            let mut new_potential = potential.intersection(&neighbors).cloned().collect::<HashSet<&str>>();
+            let mut new_potential = potential
+                .intersection(&neighbors)
+                .cloned()
+                .collect::<HashSet<&str>>();
 
             // New X is X ∩ N(v)
-            let mut new_excluded = excluded.intersection(&neighbors).cloned().collect::<HashSet<&str>>();
+            let mut new_excluded = excluded
+                .intersection(&neighbors)
+                .cloned()
+                .collect::<HashSet<&str>>();
 
             // Recursive call
             bron_kerbosch(&next, &mut new_potential, &mut new_excluded, graph, cliques);
@@ -73,8 +85,8 @@ pub fn part_one(input: &str) -> Option<usize> {
         for (i, &b) in links.iter().enumerate() {
             for &c in links.iter().skip(i + 1) {
                 if computers[b].contains(c) {
-                    let mut set = [a,b,c];
-                    if set.iter().any(|name| name.starts_with('t')){
+                    let mut set = [a, b, c];
+                    if set.iter().any(|name| name.starts_with('t')) {
                         set.sort();
                         groups.insert(set);
                     }
@@ -82,24 +94,27 @@ pub fn part_one(input: &str) -> Option<usize> {
             }
         }
     }
-    
+
     Some(groups.len())
 }
 
 pub fn part_two(input: &str) -> Option<String> {
     let computers = nodes(input);
-    
+
     let current = HashSet::new();
     let mut excluded = HashSet::new();
     let mut potential = computers.keys().cloned().collect::<HashSet<_>>();
 
     let mut cliques = Vec::new();
-    bron_kerbosch(&current, &mut potential, &mut excluded, &computers, &mut cliques);
+    bron_kerbosch(
+        &current,
+        &mut potential,
+        &mut excluded,
+        &computers,
+        &mut cliques,
+    );
 
-    let clique = cliques
-        .iter()
-        .max_by_key(|clique| clique.len())
-        .unwrap();
+    let clique = cliques.iter().max_by_key(|clique| clique.len()).unwrap();
 
     Some(clique.join(","))
 }

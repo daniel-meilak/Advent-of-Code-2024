@@ -32,11 +32,7 @@ fn get_nth_length(start: char, end: char, n: usize, numeric: bool) -> usize {
         return 1;
     }
 
-    let pad = if numeric {
-        NUMERIC
-    } else {
-        DIRECTIONAL
-    };
+    let pad = if numeric { NUMERIC } else { DIRECTIONAL };
 
     let mut path = get_path(start, end, pad);
     path.insert(0, 'A');
@@ -53,12 +49,11 @@ fn get_path(start: char, end: char, pad: &[&[char]]) -> Vec<char> {
     let mut paths: Vec<Vec<char>> = Vec::new();
     let mut unique = HashMap::new();
     let mut queue = VecDeque::new();
-    
+
     queue.push_back((start_button, Vec::new()));
     unique.insert(start_button, 0);
 
     while let Some((pos, path)) = queue.pop_front() {
-
         if pos == end_button {
             if paths.is_empty() || path.len() == paths[0].len() {
                 paths.push(path.clone());
@@ -70,8 +65,13 @@ fn get_path(start: char, end: char, pad: &[&[char]]) -> Vec<char> {
         }
 
         for dir in [(-1, 0, '<'), (0, -1, '^'), (0, 1, 'v'), (1, 0, '>')] {
-            let next = ((dir.0 + pos.0 as i32) as usize, (dir.1 + pos.1 as i32) as usize);
-            if pad[next.1][next.0] != '#' && (!unique.contains_key(&next) || path.len() <= *unique.get(&next).unwrap()) {
+            let next = (
+                (dir.0 + pos.0 as i32) as usize,
+                (dir.1 + pos.1 as i32) as usize,
+            );
+            if pad[next.1][next.0] != '#'
+                && (!unique.contains_key(&next) || path.len() <= *unique.get(&next).unwrap())
+            {
                 unique.insert(next, path.len());
                 let mut new_path = path.clone();
                 new_path.push(dir.2);
@@ -80,7 +80,13 @@ fn get_path(start: char, end: char, pad: &[&[char]]) -> Vec<char> {
         }
     }
 
-    paths.sort_by_key(|path| path.iter().collect::<Vec<_>>().windows(2).filter(|pair| pair[0] != pair[1]).count());
+    paths.sort_by_key(|path| {
+        path.iter()
+            .collect::<Vec<_>>()
+            .windows(2)
+            .filter(|pair| pair[0] != pair[1])
+            .count()
+    });
     paths[0].push('A');
     paths[0].to_owned()
 }
@@ -88,8 +94,20 @@ fn get_path(start: char, end: char, pad: &[&[char]]) -> Vec<char> {
 fn complexity(input: &str, n: usize) -> usize {
     input
         .lines()
-        .map(|line| (line[0..line.len() - 1].parse::<usize>().unwrap(), format!("{}{}", 'A', line).chars().collect::<Vec<_>>()))
-        .map(|(code, line)| (code, line.windows(2).map(|v| get_nth_length(v[0], v[1], n, true)).sum::<usize>()))
+        .map(|line| {
+            (
+                line[0..line.len() - 1].parse::<usize>().unwrap(),
+                format!("{}{}", 'A', line).chars().collect::<Vec<_>>(),
+            )
+        })
+        .map(|(code, line)| {
+            (
+                code,
+                line.windows(2)
+                    .map(|v| get_nth_length(v[0], v[1], n, true))
+                    .sum::<usize>(),
+            )
+        })
         .map(|(code, length)| code * length)
         .sum()
 }

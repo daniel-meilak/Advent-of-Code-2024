@@ -1,11 +1,11 @@
 advent_of_code::solution!(9);
 
 pub fn part_one(input: &str) -> Option<usize> {
-    let mut memory= Vec::new();
+    let mut memory = Vec::new();
     for (i, c) in input.chars().enumerate() {
         let times = c.to_digit(10).unwrap() as usize;
         if i % 2 == 0 {
-            memory.resize(memory.len() + times, Some(i/2));
+            memory.resize(memory.len() + times, Some(i / 2));
         } else {
             memory.resize(memory.len() + times, None);
         }
