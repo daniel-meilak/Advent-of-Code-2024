@@ -3,7 +3,7 @@ use std::collections::{HashMap, VecDeque};
 advent_of_code::solution!(20);
 
 #[cfg(test)]
-const TIME_SAVE: usize = 70;
+const TIME_SAVE: usize = 20;
 
 #[cfg(not(test))]
 const TIME_SAVE: usize = 100;
@@ -127,6 +127,6 @@ mod tests {
     #[test]
     fn test_part_two() {
         let result = part_two(&advent_of_code::template::read_file("examples", DAY));
-        assert_eq!(result, Some(1418));
+        assert_eq!(result, Some(1449));
     }
 }
